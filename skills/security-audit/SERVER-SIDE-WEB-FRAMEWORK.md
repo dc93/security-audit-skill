@@ -57,6 +57,32 @@ Where server-side code execution actually lives in these frameworks — rarely a
 - **Read the two generations side by side.** A framework this large keeps a legacy path next to the current one (an old controller, a deprecated API version, a compat shim, a converter from the previous major). The forgotten guard hides in the old path — and if a second version is in scope, run the differential mode in `DIFFERENTIAL-AUDIT.md`.
 - **Confirm dynamically where the language allows it.** These stacks are locally runnable: extract the suspect function into a `php -r` / `irb` / `python -c` harness, build the deserialization gadget (phpggc), or render the template in isolation. A reproduced `id` in command output beats a paragraph of reasoning about magic methods.
 
+## Starter grep — the mechanical first pass
+
+Hand these to the "obvious things" agent (from `ATTACK-CLASSES.md`) to run immediately. Each hit is a **lead to trace, not a finding** — the impact still has to be proven per the validation rules below. Tune the regexes to the target's language; the examples are PHP-first.
+
+- **Deserialization sinks** — `unserialize\(`, `yaml_parse\(`, `Marshal\.load`, `pickle\.loads`, `node-serialize`; and phar-triggering file calls on a variable path: `(file_exists|fopen|getimagesize|file_get_contents|md5_file|is_file|unlink|copy)\(\s*\$`
+- **Raw SQL escapes** — `->query\(`, `whereRaw|selectRaw|orderByRaw|havingRaw`, `DB::(raw|statement|select)\(`, `find_by_sql`, and interpolation into SQL: `(SELECT|WHERE|ORDER BY) .*(\$|\{)`
+- **Sort / identifier params** — `sortby|sortdirection|orderby|order_by|\bdirection\b|['"]col['"]` reaching a query builder
+- **Dynamic code / dispatch** — `\beval\(`, `assert\(`, `create_function`, `call_user_func(_array)?\(`, `\bnew\s+\$`, `\$\w+\(` (variable function), `preg_replace\(.*/e`, dynamic `(include|require)(_once)?\s*\(?\s*\$`
+- **Template-to-code** — the engine's expression/eval tags (`\{expression`, `\{php`, `\{\{\s*constant`, `_self`, `<%=`) and any write into a template/theme store
+- **Uploads / writes to served paths** — `move_uploaded_file|file_put_contents\(|->save\(` with the extension/MIME check that (n)ever runs beside them
+- **SSRF fetchers** — `curl_exec|fsockopen|file_get_contents\(\s*\$|->(get|request)\(\s*\$`, any HTTP-client call taking a request-derived URL
+- **Mass assignment** — `->fill\(|::create\(\s*\$|update_attributes|->all\(\)` flowing into a model save
+- **Secrets & backdoors** — `password|secret|api_?key|token|Bearer|-----BEGIN`; and `TODO|FIXME|HACK|XXX` within a few lines of `auth|permission|csrf|validate`
+- **Loose comparisons on secrets** — `==\s*\$_(GET|POST|REQUEST)`, `strcmp\(`, `md5\(.*==`, hash/token checks using `==` instead of a constant-time compare
+
+## Confirming dynamically in dynamic-language stacks
+
+These stacks run locally with almost no setup — turn a "the parser will…" argument into a reproduced result, and capture the transcript as the `execution` evidence in Phase 5.
+
+- **Isolate the suspect function.** Copy it into a scratch file and drive it with `php -r` / `ruby -e` / `python -c`; feed the crafted input and print what comes out or where it lands.
+- **Object injection.** Build the gadget with `phpggc` (`phpggc -l` lists chains for the libraries actually in the target's `vendor/`), pass the payload to the exact `unserialize` / `phar://` sink, and watch the magic method fire (a written file, a spawned process). No `phpggc` chain? Hunt one in the loaded classes by hand before calling it unreachable.
+- **Template-to-code.** Render the suspect template through the engine in isolation with an expression payload (`7*7`, or a unique marker) and confirm it evaluates.
+- **LFI → RCE.** Test wrapper escalation against the include sink directly — `php://filter/convert.base64-encode/resource=`, `data://`, session/log poisoning — in a harness, not in prose.
+
+For a worked instantiation of this whole file against a concrete stack (Invision Community / IPS 4.x sink map, grep set, and canonical chains), see [IPS-COMMUNITY-NOTES.md](IPS-COMMUNITY-NOTES.md).
+
 ## Validation rules (apply before reporting ANY finding here)
 
 1. **For ORM/injection findings, name the exact escape from the safe path.** Cite the `raw()` / interpolated fragment / unchecked identifier and the request field that reaches it. "The app uses an ORM so it might be safe/unsafe" is not a finding — a parameterized query is not vulnerable, and an allowlisted sort column is not either. Confirm the identifier or fragment is genuinely attacker-controlled and not allowlist-validated first.
