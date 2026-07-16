@@ -11,6 +11,8 @@ Select attack classes relevant to the application type. Not every class applies 
 > **HTTP-protocol and auth targets** (reverse proxies, CDNs, API gateways, custom HTTP parsers, and anything implementing sessions, JWT, OAuth/OIDC, or SAML): use the request-framing, cache, and auth-protocol classes in [WEB-PROTOCOL-AND-AUTH.md](WEB-PROTOCOL-AND-AUTH.md) alongside the classes below.
 >
 > **Client-side / browser targets** (SPAs, browser extensions, embedded webviews, anything using `postMessage`, CORS, or WebSockets, or that renders untrusted content in the DOM): use the DOM-injection, messaging-trust, and UI-redress classes in [CLIENT-SIDE.md](CLIENT-SIDE.md) alongside the classes below.
+>
+> **Server-side web framework targets** (PHP forums/CMSes/community suites, Rails/Django/Flask/Node MVC monoliths — anything with a custom ORM or query builder, a template engine it compiles or evaluates, and a plugin/theme/extension system): use the deserialization, ORM-identifier, template-to-code, extension-as-code, and mass-assignment classes in [SERVER-SIDE-WEB-FRAMEWORK.md](SERVER-SIDE-WEB-FRAMEWORK.md) alongside the classes below. When two versions of such a target are in scope at once (e.g. a legacy major line and its rewrite), also run the differential mode in [DIFFERENTIAL-AUDIT.md](DIFFERENTIAL-AUDIT.md).
 
 **Injection** (subagent_type: `general`)
 Trace untrusted input from entry point to dangerous sink. What counts as a "dangerous sink" depends on the application:

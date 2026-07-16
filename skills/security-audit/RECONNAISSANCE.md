@@ -12,6 +12,8 @@ Explore the codebase at <path>. Answer:
 3. What's the tech stack? (languages, frameworks, databases, runtime, deployment model)
 4. What comparable mainstream software exists? What security tradeoffs does the comparable accept?
 5. What's the high-level directory structure?
+6. Which specialized target class does this fall into (for companion-file routing): native/binary, AI/LLM, HTTP-protocol/auth, client-side/browser, or server-side web framework (a dynamic-language app with a custom ORM/query builder, a template engine it compiles or evaluates, and a plugin/theme/extension system)? Name the framework, its ORM, its template engine, and its extension mechanism if present.
+7. Are multiple versions or major lines of this codebase in scope at once (e.g. a 4.x and a 5.x, a legacy branch and a rewrite)? If so, note both — this triggers the differential mode.
 Return specific file paths for key entry points.
 ```
 
@@ -44,3 +46,5 @@ Collect all three agents' outputs and synthesize them into `<output-dir>/archite
 - This document is injected verbatim into every Phase 2 agent prompt
 
 If Phase 1 agents reveal the codebase is larger or more complex than expected (e.g., plugin system, multi-tenant architecture, complex auth chains, multiple deployment targets), launch additional `research` agents to map those areas before proceeding. The quality of Phase 2 depends entirely on the quality of Phase 1.
+
+Record in `architecture.md` which specialized target class(es) Agent 1a identified, so Phase 2 loads the right companion file(s) from `ATTACK-CLASSES.md`. If two versions are in scope, note the version pair and produce the subsystem correspondence map described in [DIFFERENTIAL-AUDIT.md](DIFFERENTIAL-AUDIT.md) as part of recon.

@@ -29,6 +29,8 @@ Multiple runs against the same repo are additive. Each run explores different co
 | `AI-AND-LLM.md` | Prompt-injection, agent/tool, and output-handling hunting classes for LLM-backed targets |
 | `WEB-PROTOCOL-AND-AUTH.md` | HTTP request-framing, cache, and authentication-protocol hunting classes for HTTP-protocol and auth targets |
 | `CLIENT-SIDE.md` | DOM-injection, messaging-trust, UI-redress, and prototype-pollution hunting classes for client-side/browser targets |
+| `SERVER-SIDE-WEB-FRAMEWORK.md` | Deserialization, ORM-identifier, template-to-code, extension-as-code, and mass-assignment hunting classes for dynamic-language web frameworks (PHP forums/CMSes, Rails/Django/Node monoliths) |
+| `DIFFERENTIAL-AUDIT.md` | Differential hunting mode for when two versions of the same target are in scope (legacy line vs rewrite): regressions, un-backported fixes, moved trust boundaries, half-migrated code |
 | `VALIDATION-AND-REPORTING.md` | Phases 3–6 validation, reporting, and verification |
 | `report-schema.json` | JSON schema for `findings.json` (confirmed and rejected finding structures) |
 | `validate-findings.cjs` | Zero-dependency Node.js validator that checks `findings.json` against the schema |

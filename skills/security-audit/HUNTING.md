@@ -8,6 +8,8 @@ Each agent gets the architecture summary from Phase 1 injected into its prompt p
 
 **How many agents?** Use Phase 1 to decide. More focused agents produce better results than broad ones that run out of context. For a small library, 3-4 agents may suffice. For a large application with distinct subsystems, launch 8-12+ — split by attack class AND by subsystem. If Phase 1 revealed an auth system, a plugin system, a media pipeline, and a comment engine, each of those could warrant its own injection agent, its own logic agent, etc.
 
+**Load the right companion classes.** If Phase 1 routed the target to a specialized class (native, AI/LLM, HTTP-protocol/auth, client-side, or server-side web framework — see [ATTACK-CLASSES.md](ATTACK-CLASSES.md)), give the relevant agents that companion file's classes and per-domain discipline on top of the core methodology, not instead of it. If Phase 1 flagged two versions of the target in scope, add the differential agents described in [DIFFERENTIAL-AUDIT.md](DIFFERENTIAL-AUDIT.md) alongside the per-version hunters.
+
 Every agent prompt MUST include:
 1. The architecture summary from Phase 1 (copy it in verbatim)
 2. The specific attack class and scope to investigate
