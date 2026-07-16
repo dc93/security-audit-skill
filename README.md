@@ -86,6 +86,10 @@ The skill activates automatically when the request matches its trigger (security
 - **Defense-in-depth gaps are not vulnerabilities.** If Layer A prevents the attack, the absence of Layer B is a hardening note.
 - **Multiple runs improve coverage.** Testing shows a single run finds roughly half the total vulnerabilities across multiple runs.
 
+## Evaluation
+
+`skills/security-audit/eval/` holds a small ground-truth corpus and a zero-dependency scorer (`score.cjs`) for measuring what a run actually catches — a regression net for changes to the methodology. The corpus pairs single-defect files (identifier SQLi, object injection, template-to-code RCE, mass assignment, loose-comparison auth bypass, LFI, SSRF) with deliberate safe look-alikes that measure false positives. Run the skill against `eval/corpus`, then `node eval/score.cjs <output-dir>/findings.json` reports recall and precision; `--min-recall`/`--max-fp` turn it into a pass/fail gate. See `eval/README.md`.
+
 ## Contact
 
 Questions, feedback, or comparing notes on AI-driven security tooling: security-ai-research@cloudflare.com
