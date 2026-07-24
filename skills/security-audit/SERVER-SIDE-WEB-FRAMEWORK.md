@@ -81,7 +81,7 @@ These stacks run locally with almost no setup — turn a "the parser will…" ar
 - **Template-to-code.** Render the suspect template through the engine in isolation with an expression payload (`7*7`, or a unique marker) and confirm it evaluates.
 - **LFI → RCE.** Test wrapper escalation against the include sink directly — `php://filter/convert.base64-encode/resource=`, `data://`, session/log poisoning — in a harness, not in prose.
 
-For a worked instantiation of this whole file against a concrete stack (Invision Community / IPS 4.x sink map, grep set, and canonical chains), see [IPS-COMMUNITY-NOTES.md](IPS-COMMUNITY-NOTES.md).
+For worked instantiations of this whole file against concrete stacks (sink map, grep set, and canonical chains per platform), see the stack notes: [IPS-COMMUNITY-NOTES.md](IPS-COMMUNITY-NOTES.md) (Invision Community / IPS) and [VBULLETIN-NOTES.md](VBULLETIN-NOTES.md) (vBulletin).
 
 ## Validation rules (apply before reporting ANY finding here)
 
