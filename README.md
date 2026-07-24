@@ -32,6 +32,7 @@ Multiple runs against the same repo are additive. Each run explores different co
 | `SERVER-SIDE-WEB-FRAMEWORK.md` | Deserialization, ORM-identifier, template-to-code, extension-as-code, and mass-assignment hunting classes for dynamic-language web frameworks (PHP forums/CMSes, Rails/Django/Node monoliths) |
 | `IPS-COMMUNITY-NOTES.md` | Worked stack instantiation of `SERVER-SIDE-WEB-FRAMEWORK.md` for Invision Community / IPS (4.x sink/source map, grep set, canonical chains, v4↔v5 differential notes) |
 | `VBULLETIN-NOTES.md` | Worked stack instantiation for vBulletin (4.x/5.x); built from disclosed CVEs and public research since vBulletin is closed source, flagged to verify against a licensed copy |
+| `MYBB-NOTES.md` | Worked stack instantiation for MyBB, read from source (verified against 1.9.0-alpha): input/DB APIs, the eval-based template sink, my_unserialize object-injection hardening, hooks, CSRF, and 1.8↔1.9 differential notes |
 | `DIFFERENTIAL-AUDIT.md` | Differential hunting mode for when two versions of the same target are in scope (legacy line vs rewrite): regressions, un-backported fixes, moved trust boundaries, half-migrated code |
 | `VALIDATION-AND-REPORTING.md` | Phases 3–6 validation, reporting, and verification |
 | `report-schema.json` | JSON schema for `findings.json` (confirmed and rejected finding structures) |
