@@ -29,6 +29,15 @@ Multiple runs against the same repo are additive. Each run explores different co
 | `AI-AND-LLM.md` | Prompt-injection, agent/tool, and output-handling hunting classes for LLM-backed targets |
 | `WEB-PROTOCOL-AND-AUTH.md` | HTTP request-framing, cache, and authentication-protocol hunting classes for HTTP-protocol and auth targets |
 | `CLIENT-SIDE.md` | DOM-injection, messaging-trust, UI-redress, and prototype-pollution hunting classes for client-side/browser targets |
+| `SERVER-SIDE-WEB-FRAMEWORK.md` | Deserialization, ORM-identifier, template-to-code, extension-as-code, and mass-assignment hunting classes for dynamic-language web frameworks (PHP forums/CMSes, Rails/Django/Node monoliths) |
+| `IPS-COMMUNITY-NOTES.md` | Worked stack instantiation of `SERVER-SIDE-WEB-FRAMEWORK.md` for Invision Community / IPS (4.x sink/source map, grep set, canonical chains, v4↔v5 differential notes) |
+| `VBULLETIN-NOTES.md` | Worked stack instantiation for vBulletin (4.x/5.x); built from disclosed CVEs and public research since vBulletin is closed source, flagged to verify against a licensed copy |
+| `MYBB-NOTES.md` | Worked stack instantiation for MyBB, read from source (verified against 1.9.0-alpha): input/DB APIs, the eval-based template sink, my_unserialize object-injection hardening, hooks, CSRF, and 1.8↔1.9 differential notes |
+| `PHPBB-NOTES.md` | Worked stack instantiation for phpBB, read from source (verified against 4.0.0-a3-dev): the request/`sql_*` APIs, Twig-with-autoescape-off XSS posture, raw-`unserialize` object-injection surface, form-key CSRF, ACL authz, and 3.3↔4.0 differential notes |
+| `JOOMLA-NOTES.md` | Worked stack instantiation for Joomla, read from source (verified against 5.4.x): the Input filter API (`getRaw` source), `quote`/`quoteName` DB sinks, session/cache object-injection lineage, the com_templates/com_installer RCE sinks, `checkToken` CSRF, `authorise` ACL, and 3/4↔5 differential notes |
+| `DRUPAL-NOTES.md` | Worked stack instantiation for Drupal, read from source (verified against 12.0-dev): the render-array/`TrustedCallbackInterface` RCE class, placeholder/identifier SQL sinks, Twig-autoescape-on with `inline_template` SSTI and `#markup` XSS, `unserialize` hardening, permission/`_csrf_token` routes, and 7↔8+ differential notes |
+| `WORDPRESS-NOTES.md` | Worked stack instantiation for WordPress, read from source (verified against trunk 7.1-beta): `$wpdb->prepare`/`%i` SQL sinks, the nonce-≠-capability access model, `wp_ajax_nopriv` and REST `permission_callback` surfaces, `maybe_unserialize` object injection, `add_query_arg` XSS, the editor/installer RCE sinks, and the plugin/theme ecosystem focus |
+| `DIFFERENTIAL-AUDIT.md` | Differential hunting mode for when two versions of the same target are in scope (legacy line vs rewrite): regressions, un-backported fixes, moved trust boundaries, half-migrated code |
 | `VALIDATION-AND-REPORTING.md` | Phases 3–6 validation, reporting, and verification |
 | `report-schema.json` | JSON schema for `findings.json` (confirmed and rejected finding structures) |
 | `validate-findings.cjs` | Zero-dependency Node.js validator that checks `findings.json` against the schema |
@@ -82,6 +91,10 @@ The skill activates automatically when the request matches its trigger (security
 - **Severity requires impact.** Likelihood x impact, not deviation from a checklist.
 - **Defense-in-depth gaps are not vulnerabilities.** If Layer A prevents the attack, the absence of Layer B is a hardening note.
 - **Multiple runs improve coverage.** Testing shows a single run finds roughly half the total vulnerabilities across multiple runs.
+
+## Evaluation
+
+`skills/security-audit/eval/` holds a small ground-truth corpus and a zero-dependency scorer (`score.cjs`) for measuring what a run actually catches — a regression net for changes to the methodology. The corpus pairs single-defect files (identifier SQLi, object injection, template-to-code RCE, mass assignment, loose-comparison auth bypass, LFI, SSRF) with deliberate safe look-alikes that measure false positives. Run the skill against `eval/corpus`, then `node eval/score.cjs <output-dir>/findings.json` reports recall and precision; `--min-recall`/`--max-fp` turn it into a pass/fail gate. See `eval/README.md`.
 
 ## Contact
 

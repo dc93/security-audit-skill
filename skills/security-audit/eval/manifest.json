@@ -1,0 +1,75 @@
+{
+  "$comment": "Ground truth for the eval corpus. The corpus files carry NO labels — all expectations live here, so a run cannot cheat by reading the answer. score.cjs matches a run's findings.json against these entries by file basename. 'keywords' is an informational class-match hint, not part of the pass/fail metric.",
+  "corpus": [
+    {
+      "file": "vuln/sortby_sqli.php",
+      "vulnerable": true,
+      "class": "sql-injection (identifier / ORDER BY)",
+      "keywords": ["sql", "inject", "order by", "sortby", "identifier"],
+      "description": "sortby/dir interpolated into ORDER BY of a raw query; parameterization of values does not cover identifiers."
+    },
+    {
+      "file": "vuln/object_injection.php",
+      "vulnerable": true,
+      "class": "deserialization / object injection",
+      "keywords": ["deserial", "unserialize", "object injection", "gadget", "pop chain"],
+      "description": "unserialize() on an attacker-controlled cookie with a __destruct file-write gadget in scope."
+    },
+    {
+      "file": "vuln/template_rce.php",
+      "vulnerable": true,
+      "class": "code execution / template-to-code (SSTI)",
+      "keywords": ["rce", "code execution", "eval", "template", "ssti"],
+      "description": "Persisted template source compiled to PHP and eval'd; expression tag emits evaluated PHP."
+    },
+    {
+      "file": "vuln/mass_assignment.php",
+      "vulnerable": true,
+      "class": "mass assignment / privilege escalation",
+      "keywords": ["mass assignment", "over-post", "fill", "privilege", "is_admin"],
+      "description": "Member::fill($_POST) writes arbitrary columns, including security-relevant ones, with no allowlist."
+    },
+    {
+      "file": "vuln/loose_auth.php",
+      "vulnerable": true,
+      "class": "authentication bypass / loose comparison",
+      "keywords": ["loose comparison", "type juggling", "==", "auth bypass", "magic hash"],
+      "description": "Token checked with == (magic-hash collision and array-to-null bypass)."
+    },
+    {
+      "file": "vuln/lfi_include.php",
+      "vulnerable": true,
+      "class": "local file inclusion",
+      "keywords": ["lfi", "file inclusion", "include", "path traversal", "rfi"],
+      "description": "include of pages/<page>.php with page taken directly from the query string."
+    },
+    {
+      "file": "vuln/ssrf_fetch.php",
+      "vulnerable": true,
+      "class": "server-side request forgery",
+      "keywords": ["ssrf", "request forgery", "file_get_contents", "url fetch"],
+      "description": "file_get_contents on an attacker-supplied avatar_url with no host validation."
+    },
+    {
+      "file": "safe/param_query.php",
+      "vulnerable": false,
+      "class": "safe look-alike (allowlisted sort + bound values)",
+      "keywords": [],
+      "description": "Same shape as sortby_sqli.php but the sort column is allowlisted and values are bound. Flagging it is a false positive."
+    },
+    {
+      "file": "safe/escaped_output.php",
+      "vulnerable": false,
+      "class": "safe look-alike (escaped output)",
+      "keywords": [],
+      "description": "Untrusted name is htmlspecialchars-escaped before concatenation. Flagging it is a false positive."
+    },
+    {
+      "file": "safe/guarded_assignment.php",
+      "vulnerable": false,
+      "class": "safe look-alike (fillable allowlist)",
+      "keywords": [],
+      "description": "Same shape as mass_assignment.php but only an explicit FILLABLE set is written. Flagging it is a false positive."
+    }
+  ]
+}
